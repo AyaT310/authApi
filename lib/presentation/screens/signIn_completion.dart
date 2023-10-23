@@ -1,16 +1,15 @@
-import 'package:auth_api/config/app_route.dart';
-import 'package:auth_api/config/validator.dart';
-import 'package:dio/dio.dart';
+import 'package:auth_api/config/router/app_route.dart';
+import 'package:auth_api/utils/validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../controller/auth_bloc/auth_bloc.dart';
 import '../../data/models/user.dart';
-import '../../data/repository/api_client.dart';
 
 class SignInCompletion extends StatefulWidget {
   final String? phone;
 
-  const SignInCompletion({
+  const SignInCompletion({super.key,
     this.phone,
   });
 
@@ -23,53 +22,17 @@ class _SignInCompletionState extends State<SignInCompletion> {
   TextEditingController passwordController = TextEditingController();
   bool _showPassword = true;
 
-  final ApiClient _apiClient = ApiClient();
-
-  Future<void> _login() async {
-    if (_key.currentState!.validate()) {
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: const Text('Processing Data'),
-      //   backgroundColor: Colors.green.shade300,
-      // ));
-      EasyLoading.instance
-        ..displayDuration = const Duration(milliseconds: 2000);
-      Response res = await _apiClient.login(
-        password: CheckUser(
-          phone: widget.phone,
-          password: passwordController.text.trim(),
-        ),
-      );
-
-      // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-      if (res.data['data']['access_token'] != null) {
-        String accessToken = res.data['data']['access_token'];
-        EasyLoading.show(status: 'Success...');
-        Navigator.pushNamedAndRemoveUntil(
-            context, AppRoutes.HOME, arguments: accessToken, (route) => false);
-      } else {
-        EasyLoading.show(status: 'Failed...');
-        Navigator.pushReplacementNamed(context, AppRoutes.SIGNUP);
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //   content: Text('Error'),
-        //   backgroundColor: Colors.red.shade300,
-        // ));
-      }
-    }
-    EasyLoading.dismiss();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           child: Column(
             children: [
               Image.asset("assets/images/app_logo.jpg"),
-              ListTile(
+              const ListTile(
                 title: Text(
                   "Sign In",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -80,7 +43,7 @@ class _SignInCompletionState extends State<SignInCompletion> {
                     )),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 18),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -93,9 +56,7 @@ class _SignInCompletionState extends State<SignInCompletion> {
                               color: Colors.grey.shade200,
                               borderRadius: BorderRadius.circular(10)),
                         ),
-                        SizedBox(
-                          width: 6,
-                        ),
+                        const SizedBox(width: 6),
                         Container(
                           width: 90,
                           height: 5,
@@ -105,9 +66,7 @@ class _SignInCompletionState extends State<SignInCompletion> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 50,
-                    ),
+                    const SizedBox(height: 50),
                     Text(
                       "Password",
                       style: TextStyle(
@@ -116,9 +75,7 @@ class _SignInCompletionState extends State<SignInCompletion> {
                         color: Colors.grey.shade500,
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     Form(
                       key: _key,
                       child: Column(
@@ -129,13 +86,6 @@ class _SignInCompletionState extends State<SignInCompletion> {
                             controller: passwordController,
                             validator: (value) =>
                                 Validator.validatePassword(value ?? ""),
-                            // validator: (value) {
-                            //   if (value!.isEmpty) {
-                            //     return "Password can't be empty";
-                            //   } else if (value.length < 8) {
-                            //     return "Password can't be less than 8 characters";
-                            //   }
-                            // },
                             onChanged: (value) {
                               _key.currentState!.validate();
                             },
@@ -143,7 +93,7 @@ class _SignInCompletionState extends State<SignInCompletion> {
                               suffixIcon: GestureDetector(
                                 onTap: () {
                                   setState(
-                                     () => _showPassword = !_showPassword);
+                                      () => _showPassword = !_showPassword);
                                 },
                                 child: Icon(
                                   _showPassword
@@ -152,38 +102,55 @@ class _SignInCompletionState extends State<SignInCompletion> {
                                   color: Colors.grey,
                                 ),
                               ),
-                              label: Text(
+                              label: const Text(
                                 "Password",
                               ),
                               hintText: "Password",
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
-                                      BorderSide(color: Colors.blueAccent)),
+                                      const BorderSide(color: Colors.blueAccent)),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: 60,
-                          ),
+                          const SizedBox(height: 60),
                           MaterialButton(
                             minWidth: 1000,
                             height: 60,
-                            child: Text(
-                              'Next',
-                              style: TextStyle(fontSize: 18),
-                            ),
                             color: Colors.indigo,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(40)),
                             textColor: Colors.white,
-                            onPressed: () async{
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                            onPressed: () async {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
                               prefs.setString("phone", widget.phone!);
-                              _login();
+                              BlocProvider.of<AuthBloc>(context).add(
+                                LoginEvent(
+                                  CheckUser(
+                                    phone: widget.phone,
+                                    password: passwordController.text.trim(),
+                                  ),
+                                  () {
+                                    Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      AppRoutes.HOME,
+                                      arguments:
+                                          BlocProvider.of<AuthBloc>(context)
+                                              .accessToken,
+                                      (route) => false,
+                                    );
+                                  },
+                                ),
+                              );
+                              // _login();
                             },
+                            child: const Text(
+                              'Next',
+                              style: TextStyle(fontSize: 18),
+                            ),
                           ),
                         ],
                       ),

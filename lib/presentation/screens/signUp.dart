@@ -1,6 +1,6 @@
-import 'package:auth_api/config/app_route.dart';
+import 'package:auth_api/config/router/app_route.dart';
 import 'package:flutter/material.dart';
-import '../../config/validator.dart';
+import '../../utils/validator.dart';
 import '../../data/models/register_user.dart';
 
 class SignUp extends StatefulWidget {
@@ -26,11 +26,11 @@ class _SignUpState extends State<SignUp> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 5),
           child: Column(
             children: [
               Image.asset("assets/images/app_logo.jpg"),
-              ListTile(
+              const ListTile(
                 title: Text(
                   "Sign Up",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -41,7 +41,7 @@ class _SignUpState extends State<SignUp> {
                     )),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 18),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -54,7 +54,7 @@ class _SignUpState extends State<SignUp> {
                               color: Colors.indigo,
                               borderRadius: BorderRadius.circular(10)),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 6,
                         ),
                         Container(
@@ -66,7 +66,7 @@ class _SignUpState extends State<SignUp> {
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 40,
                     ),
                     // SizedBox(height: 10,),
@@ -85,7 +85,7 @@ class _SignUpState extends State<SignUp> {
                                   color: Colors.grey.shade500,
                                 ),
                               ),
-                              Text(
+                              const Text(
                                 "(Real Name)",
                                 style: TextStyle(
                                   fontSize: 17,
@@ -95,7 +95,7 @@ class _SignUpState extends State<SignUp> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Row(
@@ -110,7 +110,7 @@ class _SignUpState extends State<SignUp> {
                                     hintText: "First Name",
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(15),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: Colors.blueAccent)),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
@@ -118,7 +118,7 @@ class _SignUpState extends State<SignUp> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Expanded(
@@ -131,7 +131,7 @@ class _SignUpState extends State<SignUp> {
                                     hintText: "Last Name",
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(15),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: Colors.blueAccent)),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(15),
@@ -141,11 +141,11 @@ class _SignUpState extends State<SignUp> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text("Email"),
-                          SizedBox(
+                          const Text("Email"),
+                          const SizedBox(
                             height: 10,
                           ),
                           TextFormField(
@@ -158,17 +158,17 @@ class _SignUpState extends State<SignUp> {
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
-                                      BorderSide(color: Colors.blueAccent)),
+                                      const BorderSide(color: Colors.blueAccent)),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text("Password"),
-                          SizedBox(
+                          const Text("Password"),
+                          const SizedBox(
                             height: 10,
                           ),
                           TextFormField(
@@ -189,26 +189,26 @@ class _SignUpState extends State<SignUp> {
                                   color: Colors.grey,
                                 ),
                               ),
-                              label: Text(
+                              label: const Text(
                                 "Password",
                               ),
                               hintText: "Password",
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
-                                      BorderSide(color: Colors.blueAccent)),
+                                      const BorderSide(color: Colors.blueAccent)),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 60,
                           ),
                           MaterialButton(
                             minWidth: 1000,
                             height: 60,
-                            child: Text(
+                            child: const Text(
                               'Next',
                               style: TextStyle(fontSize: 18),
                             ),
@@ -217,21 +217,22 @@ class _SignUpState extends State<SignUp> {
                                 borderRadius: BorderRadius.circular(40)),
                             textColor: Colors.white,
                             onPressed: () {
-                              _key.currentState?.validate();
-                              Navigator.pushNamed(
-                                context,
-                                AppRoutes.SIGNUPCOMPLETION,
-                                arguments: RegisterUser(
-                                  phone: widget.phone,
-                                  firstName: lastNameController.text,
-                                  lastName: lastNameController.text,
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                ),
-                              );
+                              if(_key.currentState!.validate()){
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.SIGNUPCOMPLETION,
+                                  arguments: RegisterUser(
+                                    phone: widget.phone,
+                                    firstName: lastNameController.text,
+                                    lastName: lastNameController.text,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  ),
+                                );
+                              }
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 40,
                           )
                         ],

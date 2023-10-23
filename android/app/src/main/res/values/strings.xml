@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+
+    <string name="app_name">Click Cash Auth</string>
+    <string name="facebook_app_id">278767715055798</string>
+    <string name="fb_login_protocol_scheme">fb278767715055798</string>
+    <string name="facebook_client_token">b162d8dba4b115739fffffd8881bcb68</string>
+
+</resources>

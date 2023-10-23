@@ -1,10 +1,9 @@
-import 'package:auth_api/config/app_route.dart';
+import 'package:auth_api/config/router/app_route.dart';
+import 'package:auth_api/controller/auth_bloc/auth_bloc.dart';
 import 'package:auth_api/data/models/register_user.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
 import '../../data/repository/api_client.dart';
 
 class OTP extends StatefulWidget {
@@ -20,56 +19,26 @@ class _OTPState extends State<OTP> {
   TextEditingController _pinController = TextEditingController();
   String currentText = "";
 
-  final ApiClient _apiClient = ApiClient();
-
-  Future<void> _checkotp() async {
-    if (_key.currentState!.validate()) {
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: const Text('Processing Data'),
-      //   backgroundColor: Colors.green.shade300,
-      // ));
-      EasyLoading.instance
-        ..displayDuration = const Duration(milliseconds: 2000);
-      // EasyLoading.show(status: 'Loading...');
-      Response res = await _apiClient.otp(code: RegisterUser(
-        code: _pinController.text
-      ));
-
-      print('@@@@ FSSS ${res.data}');
-
-      if (_pinController.text == "1234") {
-        EasyLoading.show(status: 'Success...');
-        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGNIN, (route) => false);
-
-      } else {
-        EasyLoading.show(status: 'Failed...');
-        Navigator.pushReplacementNamed(context, AppRoutes.SIGNUP);
-
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //   content: Text('Error'),
-        //   backgroundColor: Colors.red.shade300,
-        // ));
-      }
-    }
-    EasyLoading.dismiss();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider(
+  create: (context) => AuthBloc(
+    ApiClient(),
+  ),
+  child: Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 5),
           child: Column(
               children: [
               Image.asset("assets/images/app_logo.jpg"),
-          ListTile(
+          const ListTile(
             title: Text("Confirm Your Registration",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
             subtitle: Text("Enter The Activation Code",style: TextStyle(fontSize: 16,)),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 18),
+            padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -83,7 +52,7 @@ class _OTPState extends State<OTP> {
                   borderRadius: BorderRadius.circular(10)
               ),
             ),
-            SizedBox(width: 6,),
+            const SizedBox(width: 6,),
             Container(
               width: 90,
               height: 5,
@@ -94,9 +63,9 @@ class _OTPState extends State<OTP> {
             )
             ],
           ),
-          SizedBox(height: 50,),
+          const SizedBox(height: 50,),
           Text("OTP", style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.grey.shade500,),),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
                 Form(
                   key: _key,
                     child: Center(
@@ -132,16 +101,25 @@ class _OTPState extends State<OTP> {
                 )
                 ),
                 Text("Activation Code Sent To Your Number", style: TextStyle(fontSize: 16,color: Colors.grey.shade700,),),
-                SizedBox(height: 90,),
+                const SizedBox(height: 90,),
                 MaterialButton(
                   minWidth: 1000,
                   height: 60,
-                  child: Text('Next',style: TextStyle(fontSize: 18),),
+                  child: const Text('Next',style: TextStyle(fontSize: 18),),
                   color: Colors.indigo,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                   textColor: Colors.white,
                   onPressed: () {
-                    _checkotp();
+                    BlocProvider.of<AuthBloc>(context).add(
+                      OtpEvent(
+                        RegisterUser(
+                          code: _pinController.text
+                        ),
+                            () {
+                              Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGNIN, (route) => false);
+                        },
+                      ),
+                    );
                   },
                 ),
               ]
@@ -151,7 +129,8 @@ class _OTPState extends State<OTP> {
           ),
         ),
       )
-    );
+    ),
+);
   }
 }
 

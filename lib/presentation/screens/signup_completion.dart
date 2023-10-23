@@ -1,12 +1,10 @@
-import 'package:dio/dio.dart';
+import 'package:auth_api/controller/auth_bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
-import '../../config/app_route.dart';
-import '../../config/validator.dart';
+import '../../config/router/app_route.dart';
+import '../../utils/validator.dart';
 import '../../data/models/register_user.dart';
-import '../../data/repository/api_client.dart';
 
 class SignUpCompletion extends StatefulWidget {
   final RegisterUser user;
@@ -22,46 +20,7 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
   TextEditingController dateinput = TextEditingController();
   TextEditingController referralCode = TextEditingController();
 
-  final ApiClient _apiClient = ApiClient();
-
-  Future<void> _register() async {
-    if (_key.currentState!.validate()) {
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: const Text('Processing Data'),
-      //   backgroundColor: Colors.green.shade300,
-      // ));
-      EasyLoading.instance
-        ..displayDuration = const Duration(milliseconds: 2000);
-      RegisterUser? registerUser;
-
-      registerUser = widget.user;
-
-      registerUser.birthdate = dateinput.text;
-
-      Response res = await _apiClient.registerUser(
-        userData: registerUser,
-      );
-
-      print('@@@@ FSSS ${res.data}');
-
-      // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-      if (res.data['data']['access_token'] != null) {
-        String accessToken = res.data['data']['access_token'];
-        EasyLoading.show(status: 'Success...');
-        Navigator.pushReplacementNamed(context, AppRoutes.OTP,arguments: RegisterUser());
-
-      } else {
-        EasyLoading.show(status: 'Failed...');
-        Navigator.pushReplacementNamed(context, AppRoutes.SIGNUP);
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //   content: Text('Error'),
-        //   backgroundColor: Colors.red.shade300,
-        // ));
-      }
-    }
-    EasyLoading.dismiss();
-  }
+  RegisterUser? registerUser;
 
   final _items = [
     'Male',
@@ -75,11 +34,11 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 5),
           child: Column(
             children: [
               Image.asset("assets/images/app_logo.jpg"),
-              ListTile(
+              const ListTile(
                 title: Text(
                   "Sign Up",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -90,7 +49,7 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                     )),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 18),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -103,7 +62,7 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                               color: Colors.grey.shade200,
                               borderRadius: BorderRadius.circular(10)),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 6,
                         ),
                         Container(
@@ -115,7 +74,7 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 40,
                     ),
                     // SizedBox(height: 10,),
@@ -124,8 +83,8 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Gender"),
-                          SizedBox(
+                          const Text("Gender"),
+                          const SizedBox(
                             height: 10,
                           ),
                           FormField<String>(
@@ -136,7 +95,7 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                                 return InputDecorator(
                                   decoration: InputDecoration(
                                       contentPadding:
-                                          EdgeInsets.fromLTRB(12, 5, 20, 5),
+                                          const EdgeInsets.fromLTRB(12, 5, 20, 5),
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(15.0))),
@@ -163,87 +122,79 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                                   ),
                                 );
                               }),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text("Birthdate"),
-                          SizedBox(
+                          const Text("Birthdate"),
+                          const SizedBox(
                             height: 10,
                           ),
                           TextFormField(
                             controller: dateinput,
                             validator: (value) =>
-                                Validator.validateDropDefaultData(value ?? ""),
+                                Validator.validateDropDefaultData(
+                                    value ?? ""),
                             decoration: InputDecoration(
                                 // icon: Icon(Icons.calendar_today),
                                 labelText: "Select Your Birth Date",
                                 border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15.0))),
+                                    borderRadius:
+                                        BorderRadius.circular(15.0))),
                             readOnly: true,
                             onTap: () async {
                               DateTime? pickedDate = await showDatePicker(
                                   context: context,
                                   initialDate: DateTime.now(),
                                   firstDate: DateTime(1910),
-                                  //DateTime.now() - not to allow to choose before today.
                                   lastDate: DateTime.now());
 
                               if (pickedDate != null) {
                                 print(
-                                    pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                                    pickedDate);
                                 String formattedDate =
-                                    DateFormat('yyyy-MM-dd').format(pickedDate);
+                                    DateFormat('yyyy-MM-dd')
+                                        .format(pickedDate);
                                 print(
-                                    formattedDate); //formatted date output using intl package =>  2021-03-16
-                                //you can implement different kind of Date Format here according to your requirement
-
+                                    formattedDate);
                                 setState(() {
                                   dateinput.text =
-                                      formattedDate; //set output date to TextField value.
+                                      formattedDate;
                                 });
                               } else {
                                 print("Date is not selected");
                               }
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text("Birthdate"),
-                          SizedBox(
+                          const Text("Birthdate"),
+                          const SizedBox(
                             height: 10,
                           ),
                           TextFormField(
                             controller: referralCode,
                             validator: (value) =>
                                 Validator.validateText(value ?? ""),
-                            // validator: (value) {
-                            //   if(value!.isEmpty){
-                            //     return "Referral Code can't be empty";
-                            //   }
-                            // },
-                            // onChanged: (value) {
-                            //   _key.currentState!.validate();
-                            // },
                             decoration: InputDecoration(
                               labelText: "Referral Code",
                               hintText: "Enter Code",
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
-                                      BorderSide(color: Colors.blueAccent)),
+                                      const BorderSide(color: Colors.blueAccent)),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 60,
                           ),
                           MaterialButton(
                             minWidth: 1000,
                             height: 60,
-                            child: Text(
+                            child: const Text(
                               'Next',
                               style: TextStyle(fontSize: 18),
                             ),
@@ -252,12 +203,23 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                                 borderRadius: BorderRadius.circular(40)),
                             textColor: Colors.white,
                             onPressed: () {
-                              _register();
-                              // _key.currentState?.validate();
-                              // Navigator.pushNamedAndRemoveUntil(context, AppRoutes.HOME, (route) => false);
+                              widget.user.birthdate = dateinput.text;
+                              BlocProvider.of<AuthBloc>(context).add(
+                                RegisterUserEvent(
+                                  widget.user,
+                                  () {
+                                    Navigator.pushReplacementNamed(
+                                      context,
+                                      AppRoutes.OTP,
+                                      arguments: widget.user,
+                                    );
+                                  },
+                                ),
+                              );
+                              // _register();
                             },
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 40,
                           )
                         ],

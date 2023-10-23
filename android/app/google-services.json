@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "786830665099",
+    "project_id": "click-cashauth",
+    "storage_bucket": "click-cashauth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786830665099:android:56a85df16648748a29fb8e",
+        "android_client_info": {
+          "package_name": "com.example.auth_api"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZsLIWmmz_aN_ApQ9JWLS_lDsbPtbQXkA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

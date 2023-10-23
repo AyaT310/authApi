@@ -43,8 +43,6 @@ class Validator {
     }
   }
 
-
-
   static String? validatePhoneNumber(value) {
     if (value.length != 11) {
       return '🚩 Phone number is not valid.';

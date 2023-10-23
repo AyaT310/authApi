@@ -1,11 +1,11 @@
-import 'package:auth_api/config/app_route.dart';
+import 'package:auth_api/config/router/app_route.dart';
+import 'package:auth_api/controller/auth_bloc/auth_bloc.dart';
 import 'package:auth_api/data/models/user.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import '../../data/repository/api_client.dart';
+import '../../services/auth_integration_services.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -18,43 +18,17 @@ class _SignInState extends State<SignIn> {
   GlobalKey<FormState> _key = GlobalKey();
   TextEditingController phoneController = TextEditingController();
 
-  final ApiClient _apiClient = ApiClient();
-
   String? countryCode;
+  String? fullPhone;
 
-  Future<void> _checkRegistration() async {
-    if (_key.currentState!.validate()) {
-      String fullPhone =
-          '${countryCode ?? '20'}-${phoneController.text.trim()}';
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: const Text('Processing Data'),
-      //   backgroundColor: Colors.green.shade300,
-      // ));
-      EasyLoading.instance
-        ..displayDuration = const Duration(milliseconds: 2000);
-      Response res = await _apiClient.checkIfRegistered(
-        phone: CheckUser(
-          phone: fullPhone,
-        ),
-      );
+  @override
+  void initState() {
+    super.initState();
+    updatePhoneNumber();
+  }
 
-      print('@@@@ FSSS ${res.data}');
-
-      // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-      if (res.data['data']['is_exist'] == true) {
-        EasyLoading.show(status: 'Loading...');
-        Navigator.pushNamed(
-          context,
-          AppRoutes.SIGNINPASS,
-          arguments: fullPhone,
-        );
-      } else {
-        Navigator.pushReplacementNamed(context, AppRoutes.SIGNUP,arguments: fullPhone);
-
-      }
-    }
-    EasyLoading.dismiss();
+  updatePhoneNumber() {
+    fullPhone = '${countryCode ?? '20'}-${phoneController.text.trim()}';
   }
 
   @override
@@ -63,11 +37,11 @@ class _SignInState extends State<SignIn> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           child: Column(
             children: [
               Image.asset("assets/images/app_logo.jpg"),
-              ListTile(
+              const ListTile(
                 title: Text(
                   "Sign In",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -78,7 +52,7 @@ class _SignInState extends State<SignIn> {
                     )),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 18),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -91,7 +65,7 @@ class _SignInState extends State<SignIn> {
                               color: Colors.indigo,
                               borderRadius: BorderRadius.circular(10)),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 6,
                         ),
                         Container(
@@ -103,7 +77,7 @@ class _SignInState extends State<SignIn> {
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 50,
                     ),
                     Text(
@@ -114,7 +88,7 @@ class _SignInState extends State<SignIn> {
                         color: Colors.grey.shade500,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Form(
@@ -125,7 +99,8 @@ class _SignInState extends State<SignIn> {
                           IntlPhoneField(
                             initialCountryCode: "EG",
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[0-9]')),
                               FilteringTextInputFormatter.deny(
                                 RegExp(
                                     r'^0+'), //users can't type 0 at 1st position
@@ -135,8 +110,8 @@ class _SignInState extends State<SignIn> {
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
-                                  borderSide:
-                                      BorderSide(color: Colors.blueAccent)),
+                                  borderSide: const BorderSide(
+                                      color: Colors.blueAccent)),
                               labelText: "Phone Number",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
@@ -145,6 +120,7 @@ class _SignInState extends State<SignIn> {
                             showCountryFlag: false,
                             languageCode: "en",
                             onChanged: (phone) {
+                              updatePhoneNumber();
                               print(phone.completeNumber);
                             },
                             onCountryChanged: (country) {
@@ -154,15 +130,15 @@ class _SignInState extends State<SignIn> {
                                   ' ${country.fullCountryCode}');
                             },
                           ),
-                          SizedBox(height: 25),
-                          Text("By login to account, you agree our"),
+                          const SizedBox(height: 25),
+                          const Text("By login to account, you agree our"),
                           TextButton(
                               onPressed: () {},
-                              child: Text("Terms and conditions")),
+                              child: const Text("Terms and conditions")),
                           MaterialButton(
                             minWidth: 1000,
                             height: 60,
-                            child: Text(
+                            child: const Text(
                               'Next',
                               style: TextStyle(fontSize: 18),
                             ),
@@ -171,9 +147,118 @@ class _SignInState extends State<SignIn> {
                                 borderRadius: BorderRadius.circular(40)),
                             textColor: Colors.white,
                             onPressed: () {
-                              _checkRegistration();
+                              BlocProvider.of<AuthBloc>(context).add(
+                                CheckUserEvent(
+                                  phone: CheckUser(
+                                    phone: fullPhone,
+                                  ),
+                                  existAction: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppRoutes.SIGNINPASS,
+                                      arguments: fullPhone,
+                                    );
+                                  },
+                                  notExistAction: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppRoutes.SIGNUP,
+                                      arguments: fullPhone,
+                                    );
+                                  },
+                                ),
+                              );
                             },
                           ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          InkWell(
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 80),
+                                width: 200,
+                                height: 50,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.grey.shade100,
+                                ),
+                                child: Center(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 30,
+                                        height: 30,
+                                        decoration: const BoxDecoration(
+                                          image: DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/images/google_logo.png"),
+                                              fit: BoxFit.cover),
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                      const Text(
+                                        "Sign In With Google",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              onTap: () async {
+                                // signInWithGoogle();
+                                AuthIntegrationServices()
+                                    .signInWithGoogle(context);
+                              }),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          // InkWell(
+                          //     child: Container(
+                          //       margin: EdgeInsets.symmetric(horizontal: 80),
+                          //       width: 200,
+                          //       height: 50,
+                          //       padding: EdgeInsets.symmetric(horizontal: 2),
+                          //       decoration: BoxDecoration(
+                          //         borderRadius: BorderRadius.circular(20),
+                          //         color: Colors.grey.shade100,
+                          //       ),
+                          //       child: Center(
+                          //         child: Row(
+                          //           // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //           children: [
+                          //             Container(
+                          //               width: 30,
+                          //               height: 30,
+                          //               decoration: BoxDecoration(
+                          //                 image: DecorationImage(
+                          //                     image: AssetImage(
+                          //                         "assets/images/facebook_logo.png"),
+                          //                     fit: BoxFit.cover),
+                          //                 shape: BoxShape.circle,
+                          //               ),
+                          //             ),
+                          //             Text(
+                          //               "Sign In With Facebook",
+                          //               style: TextStyle(
+                          //                 fontSize: 16,
+                          //                 fontWeight: FontWeight.bold,
+                          //               ),
+                          //             )
+                          //           ],
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     onTap: () async {
+                          //       // signInWithFacebook();
+                          //       AuthIntegrationServices()
+                          //           .signInWithFacebook(context);
+                          //     }),
                         ],
                       ),
                     ),

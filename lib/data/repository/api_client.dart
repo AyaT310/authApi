@@ -1,7 +1,8 @@
-import 'package:auth_api/config/constatns.dart';
+import 'package:auth_api/utils/constatns.dart';
 import 'package:auth_api/data/models/register_user.dart';
 import 'package:auth_api/data/models/user.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ApiClient {
   final Dio _dio = Dio();
@@ -11,7 +12,7 @@ class ApiClient {
   };
   Map<String, dynamic> accessheaders = {
     'Accept': 'application/json',
-    "Token" : "eyJ0eXAi1iJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiY2M1MGYwN2EwNjFlMTUzY2RmOTNhNGI5NTlkZDUzOWVkZjc2YjkxNTQ5Mjg0Zjc1OTIyODY1M2U1MWNkOWI1NzhhNjBjN2RkNjMxZTAxYWIiLCJpYXQiOjE2OTY3NTY2MzcsIm5iZiI6MTY5Njc1NjYzNywiZXhwIjoxNzI4Mzc5MDM3LCJzdWIiOiI5ODk2ZTJhYy1hMTcwLTQxZWYtYjYzYS1hODUxMTA4ODM3ZjYiLCJzY29wZXMiOltdfQ.0Z9zECDKr0JfrXAl9z_QKumAIFsROI1Y93wYGqB9U09B0Ee1dVmSa3lIvA0bUVLZEmqrHbdVnhbT6dzuJG1s0OVyCVXKLTK3Z6VkPP2KJJ25WH7DuLb4vXSRBXw7lMHlU_uIOW0NsnrUP5_-miG8hkfQmYaqI-ls56Nvha3jWu7TU-yOVojh10HQ-kmIRVUvdkusMikNlXtzHBQ2tgUrNUXQAJxtXK06rLNoeLweUbfKuO22Yc5bNZUZv7vXxw8zRufTHLeJXbUepZjoqvucEUkk3vcluXzNHh1aTMHwMOHM3ClEqgrcAjZ-eKUP6MoayH0EFvIsaiG7-OpnKcO_2mtlbpPaZ93pmj14tqFqahOxSPc3O1KWru-AMvHQcDGbdn_2JxagEN1BoooLKP68bqW9cPbb2i8fiikGB9E2dkpwxpORQXBgQViHsW1FripDss0wc9LhK4IGtMsjp3rMSd_6UE4sBz_Pa8xis4eb7X4APCP0aKNfOMNnSdwBPKl0eYNxd68C0-8TmBWtS3lOWOo-jSFAPrDX1-6cbCuoAaL6kjyglaoXihCinc3Ikm5O25gO4cX830jPUbFfbRpgw0DnXPuQaVyCidK0l8aVLwXLGatbSyWFBMufqKb7Yv_jXRnV1nQtscmWkFoN9jFOxP7zMrIVYtnM9vT0bKsyc94"
+    "Token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZWI3OTEwODYxNjk5OTliNWJhNTFiMmViN2NjNmYxYzM0NTk5OTA5ZGNhY2I5MWMyMjdjZDA0OTYzZmZhMTE0ZTBjOTA2ZTRkYjZhY2IxMDAiLCJpYXQiOjE2OTcwMTA5MTEsIm5iZiI6MTY5NzAxMDkxMSwiZXhwIjoxNzI4NjMzMzExLCJzdWIiOiI5NzBjMWY0OS05MDQyLTRiYmYtYWQyZC00ZTlmOWEyZDNiNzUiLCJzY29wZXMiOltdfQ.ht_NY7SAxMRWditCY-JR1DhlWWnHpkkTA6blRc4oNT6zNxK9QBXShoCzTwIOJE0kGxecYjlXsa_n7ZQqYcpREFT0laPAiOVd5Zswk6MhYud9glbOAFNgBYt0mvelBJGPGKqSfJShhH2lnraDPl8qsZ_-RILBm_4rVaNZ1O9b-doL13WC8SPcs8hKmw_in2JdIcsW4iyg2gjljr9Xhi8RgitL3CITzXNGb5hh-wMniwf_s_vQO3xjgFf7C5z3eUNIjCmyLDfra1AYZnTeHj9xldS25ZdIUGKp_h1I886_OI-XxNrNBKaFnaRltef4COINhyzBv-3q_D5AI9BBldKTsa3Kyj_ZkKq0xxd89OSOed8tA0M5BiB9P_dsFpVfFAfGI3sXvI99ABDG6ByWV1UYT2RVcjHr7DdgOX8-k7tftZ6EHCSewGdNwH13RoN9ITLlayHlFTKIkU1sOjU9Y"
   };
 
   Future<Response> checkIfRegistered({required CheckUser phone}) async {
@@ -59,15 +60,18 @@ class ApiClient {
     }
   }
 
-  Future<Response> otp({required RegisterUser code}) async {
+  Future<Response> otp({required RegisterUser code, required }) async {
     print('Body OTP: ${code.toJson()}');
     try {
       Response response = await _dio.post(baseUrl + "activate",
         data: code.toJson(),
         options: Options(headers: accessheaders),
       );
+      print(response);
       return response;
     } on DioException catch (e) {
+      print(e.response);
+      EasyLoading.showError("something went wrong");
       return e.response!;
     }
   }

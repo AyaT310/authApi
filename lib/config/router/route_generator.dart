@@ -2,10 +2,10 @@ import 'package:auth_api/data/models/register_user.dart';
 import 'package:auth_api/presentation/screens/home.dart';
 import 'package:auth_api/presentation/screens/otp.dart';
 import 'package:flutter/material.dart';
-import '../presentation/screens/signIn.dart';
-import '../presentation/screens/signIn_completion.dart';
-import '../presentation/screens/signUp.dart';
-import '../presentation/screens/signup_completion.dart';
+import '../../presentation/screens/signIn.dart';
+import '../../presentation/screens/signIn_completion.dart';
+import '../../presentation/screens/signUp.dart';
+import '../../presentation/screens/signup_completion.dart';
 import 'app_route.dart';
 import 'error_route.dart';
 
@@ -15,7 +15,7 @@ class RouteGenerator {
     switch (settings.name) {
       case AppRoutes.SIGNIN:
         return MaterialPageRoute(
-          builder: (context) => SignIn(),
+          builder: (context) => const SignIn(),
         );
 
       case AppRoutes.SIGNINPASS:
@@ -46,7 +46,7 @@ class RouteGenerator {
         );
 
       default:
-        return MaterialPageRoute(builder: (context) => ErrorRoute());
+        return MaterialPageRoute(builder: (context) => const ErrorRoute());
     }
   }
 }
