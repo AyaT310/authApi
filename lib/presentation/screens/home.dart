@@ -1,12 +1,14 @@
-import 'package:auth_api/controller/home_bloc/home_bloc.dart';
+import 'package:auth_api/config/router/app_route.dart';
 import 'package:auth_api/presentation/widgets/bonus.dart';
 import 'package:auth_api/presentation/widgets/categories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../buisnessLogic/home_bloc/home_bloc.dart';
 import '../widgets/carousel_slider.dart';
 import '../widgets/offers.dart';
 import '../widgets/retailer_item.dart';
 import '../widgets/search_bar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, Object? accesstoken});
@@ -49,6 +51,12 @@ class _HomeState extends State<Home> {
                           height: 20,
                         ),
                         RetailerItem(retailer: state.data.data?.retailers ?? []),
+                        TextButton(
+                            onPressed: (){
+                              Navigator.pushNamed(context, AppRoutes.ALLRETAILERS);
+                            },
+                            child: Text(AppLocalizations.of(context)!.allretailers),
+                        ),
                         const SizedBox(
                           height: 15,
                         ),

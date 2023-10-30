@@ -1,10 +1,11 @@
 import 'package:auth_api/config/router/app_route.dart';
-import 'package:auth_api/controller/auth_bloc/auth_bloc.dart';
 import 'package:auth_api/data/models/register_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import '../../buisnessLogic/auth_bloc/auth_bloc.dart';
 import '../../data/repository/api_client.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OTP extends StatefulWidget {
   final RegisterUser user;
@@ -33,9 +34,9 @@ class _OTPState extends State<OTP> {
           child: Column(
               children: [
               Image.asset("assets/images/app_logo.jpg"),
-          const ListTile(
-            title: Text("Confirm Your Registration",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-            subtitle: Text("Enter The Activation Code",style: TextStyle(fontSize: 16,)),
+           ListTile(
+            title: Text(AppLocalizations.of(context)!.confirmRegistration,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+            subtitle: Text(AppLocalizations.of(context)!.enterActivationCode,style: TextStyle(fontSize: 16,)),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -64,7 +65,7 @@ class _OTPState extends State<OTP> {
             ],
           ),
           const SizedBox(height: 50,),
-          Text("OTP", style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.grey.shade500,),),
+          Text(AppLocalizations.of(context)!.otp, style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.grey.shade500,),),
           const SizedBox(height: 10,),
                 Form(
                   key: _key,
@@ -100,12 +101,12 @@ class _OTPState extends State<OTP> {
                       ),
                 )
                 ),
-                Text("Activation Code Sent To Your Number", style: TextStyle(fontSize: 16,color: Colors.grey.shade700,),),
+                Text(AppLocalizations.of(context)!.activationCodeSent, style: TextStyle(fontSize: 16,color: Colors.grey.shade700,),),
                 const SizedBox(height: 90,),
                 MaterialButton(
                   minWidth: 1000,
                   height: 60,
-                  child: const Text('Next',style: TextStyle(fontSize: 18),),
+                  child: Text(AppLocalizations.of(context)!.next,style: TextStyle(fontSize: 18),),
                   color: Colors.indigo,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                   textColor: Colors.white,

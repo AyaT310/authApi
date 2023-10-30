@@ -1,10 +1,11 @@
-import 'package:auth_api/controller/auth_bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import '../../buisnessLogic/auth_bloc/auth_bloc.dart';
 import '../../config/router/app_route.dart';
 import '../../utils/validator.dart';
 import '../../data/models/register_user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignUpCompletion extends StatefulWidget {
   final RegisterUser user;
@@ -38,12 +39,12 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
           child: Column(
             children: [
               Image.asset("assets/images/app_logo.jpg"),
-              const ListTile(
+               ListTile(
                 title: Text(
-                  "Sign Up",
+                  AppLocalizations.of(context)!.signUp,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text("Please Enter The Required Data",
+                subtitle: Text(AppLocalizations.of(context)!.enterData,
                     style: TextStyle(
                       fontSize: 16,
                     )),
@@ -83,7 +84,7 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Gender"),
+                          Text(AppLocalizations.of(context)!.gender),
                           const SizedBox(
                             height: 10,
                           ),
@@ -125,7 +126,7 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text("Birthdate"),
+                          Text(AppLocalizations.of(context)!.birthdate),
                           const SizedBox(
                             height: 10,
                           ),
@@ -136,7 +137,7 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                                     value ?? ""),
                             decoration: InputDecoration(
                                 // icon: Icon(Icons.calendar_today),
-                                labelText: "Select Your Birth Date",
+                                labelText: AppLocalizations.of(context)!.selectBirthdate,
                                 border: OutlineInputBorder(
                                     borderRadius:
                                         BorderRadius.circular(15.0))),
@@ -168,7 +169,7 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text("Birthdate"),
+                          Text(AppLocalizations.of(context)!.birthdate),
                           const SizedBox(
                             height: 10,
                           ),
@@ -177,8 +178,8 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                             validator: (value) =>
                                 Validator.validateText(value ?? ""),
                             decoration: InputDecoration(
-                              labelText: "Referral Code",
-                              hintText: "Enter Code",
+                              labelText: AppLocalizations.of(context)!.referralCode,
+                              hintText: AppLocalizations.of(context)!.enterCode,
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
@@ -194,8 +195,8 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                           MaterialButton(
                             minWidth: 1000,
                             height: 60,
-                            child: const Text(
-                              'Next',
+                            child: Text(
+                              AppLocalizations.of(context)!.next,
                               style: TextStyle(fontSize: 18),
                             ),
                             color: Colors.indigo,
@@ -204,18 +205,20 @@ class _SignUpCompletionState extends State<SignUpCompletion> {
                             textColor: Colors.white,
                             onPressed: () {
                               widget.user.birthdate = dateinput.text;
-                              BlocProvider.of<AuthBloc>(context).add(
-                                RegisterUserEvent(
-                                  widget.user,
-                                  () {
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      AppRoutes.OTP,
-                                      arguments: widget.user,
-                                    );
-                                  },
-                                ),
-                              );
+                              if(_key.currentState!.validate()){
+                                BlocProvider.of<AuthBloc>(context).add(
+                                  RegisterUserEvent(
+                                    widget.user,
+                                        () {
+                                      Navigator.pushReplacementNamed(
+                                        context,
+                                        AppRoutes.OTP,
+                                        arguments: widget.user,
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
                               // _register();
                             },
                           ),

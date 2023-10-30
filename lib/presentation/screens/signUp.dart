@@ -2,6 +2,7 @@ import 'package:auth_api/config/router/app_route.dart';
 import 'package:flutter/material.dart';
 import '../../utils/validator.dart';
 import '../../data/models/register_user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignUp extends StatefulWidget {
   final String? phone;
@@ -30,12 +31,12 @@ class _SignUpState extends State<SignUp> {
           child: Column(
             children: [
               Image.asset("assets/images/app_logo.jpg"),
-              const ListTile(
+               ListTile(
                 title: Text(
-                  "Sign Up",
+                  AppLocalizations.of(context)!.signUp,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text("Please Enter The Required Data",
+                subtitle: Text(AppLocalizations.of(context)!.enterData,
                     style: TextStyle(
                       fontSize: 16,
                     )),
@@ -78,15 +79,15 @@ class _SignUpState extends State<SignUp> {
                           Row(
                             children: [
                               Text(
-                                "Name ",
+                                AppLocalizations.of(context)!.name,
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey.shade500,
                                 ),
                               ),
-                              const Text(
-                                "(Real Name)",
+                               Text(
+                                AppLocalizations.of(context)!.realName,
                                 style: TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.bold,
@@ -106,8 +107,8 @@ class _SignUpState extends State<SignUp> {
                                   validator: (value) =>
                                       Validator.validateName(value ?? ""),
                                   decoration: InputDecoration(
-                                    labelText: "First Name",
-                                    hintText: "First Name",
+                                    labelText: AppLocalizations.of(context)!.firstName,
+                                    hintText: AppLocalizations.of(context)!.firstName,
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(15),
                                         borderSide: const BorderSide(
@@ -127,8 +128,8 @@ class _SignUpState extends State<SignUp> {
                                   validator: (value) =>
                                       Validator.validateName(value ?? ""),
                                   decoration: InputDecoration(
-                                    labelText: "Last Name",
-                                    hintText: "Last Name",
+                                    labelText: AppLocalizations.of(context)!.lastName,
+                                    hintText: AppLocalizations.of(context)!.lastName,
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(15),
                                         borderSide: const BorderSide(
@@ -144,7 +145,7 @@ class _SignUpState extends State<SignUp> {
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text("Email"),
+                          Text(AppLocalizations.of(context)!.email),
                           const SizedBox(
                             height: 10,
                           ),
@@ -153,8 +154,8 @@ class _SignUpState extends State<SignUp> {
                             validator: (value) =>
                                 Validator.validateEmail(value ?? ""),
                             decoration: InputDecoration(
-                              labelText: "Email",
-                              hintText: "Email",
+                              labelText: AppLocalizations.of(context)!.email,
+                              hintText: AppLocalizations.of(context)!.email,
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
@@ -167,7 +168,7 @@ class _SignUpState extends State<SignUp> {
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text("Password"),
+                          Text(AppLocalizations.of(context)!.password),
                           const SizedBox(
                             height: 10,
                           ),
@@ -189,10 +190,10 @@ class _SignUpState extends State<SignUp> {
                                   color: Colors.grey,
                                 ),
                               ),
-                              label: const Text(
-                                "Password",
+                              label: Text(
+                                AppLocalizations.of(context)!.password,
                               ),
-                              hintText: "Password",
+                              hintText: AppLocalizations.of(context)!.password,
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
@@ -208,8 +209,8 @@ class _SignUpState extends State<SignUp> {
                           MaterialButton(
                             minWidth: 1000,
                             height: 60,
-                            child: const Text(
-                              'Next',
+                            child: Text(
+                              AppLocalizations.of(context)!.next,
                               style: TextStyle(fontSize: 18),
                             ),
                             color: Colors.indigo,

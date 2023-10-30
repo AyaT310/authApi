@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/models/home_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EarnBonus extends StatelessWidget {
   final List<Bonus> bonus;
@@ -11,7 +12,7 @@ class EarnBonus extends StatelessWidget {
       // mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Earn More With Bonus",
+        Text(AppLocalizations.of(context)!.earnbonus,
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -102,9 +103,9 @@ class EarnBonus extends StatelessWidget {
               ),
             ),
             onPressed: () {},
-            child: const Text(
-              "See All Bonuses",
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.of(context)!.seebonus,
+              style: const TextStyle(
                   fontSize: 18,
                   color: Color.fromARGB(255, 16, 98, 92)),
             )),

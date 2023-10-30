@@ -5,4 +5,6 @@ class AppRoutes {
   static const String SIGNUPCOMPLETION = 'signUp_completion';
   static const String OTP = 'otp';
   static const String HOME = 'home';
+  static const String ALLCATEGORIES = 'all_categories';
+  static const String ALLRETAILERS = 'all_retailers';
 }

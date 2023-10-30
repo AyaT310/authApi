@@ -1,4 +1,5 @@
 import 'package:auth_api/data/models/register_user.dart';
+import 'package:auth_api/presentation/screens/all_retailers.dart';
 import 'package:auth_api/presentation/screens/home.dart';
 import 'package:auth_api/presentation/screens/otp.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,11 @@ class RouteGenerator {
       case AppRoutes.HOME:
         return MaterialPageRoute(
           builder: (context) => Home(accesstoken: args),
+        );
+
+      case AppRoutes.ALLRETAILERS:
+        return MaterialPageRoute(
+          builder: (context) =>  const AllRetailersScreen(),
         );
 
       default:

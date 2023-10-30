@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/models/home_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class RetailerItem extends StatelessWidget {
   final List<Retailers> retailer;
   const RetailerItem({super.key,
@@ -13,9 +15,9 @@ class RetailerItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 20,
+          height: 25,
           child: Text(
-            "Recommended Retailers",
+            AppLocalizations.of(context)!.retailers,
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

@@ -1,11 +1,12 @@
 import 'package:auth_api/config/router/app_route.dart';
-import 'package:auth_api/controller/auth_bloc/auth_bloc.dart';
 import 'package:auth_api/data/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import '../../buisnessLogic/auth_bloc/auth_bloc.dart';
 import '../../services/auth_integration_services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -41,12 +42,12 @@ class _SignInState extends State<SignIn> {
           child: Column(
             children: [
               Image.asset("assets/images/app_logo.jpg"),
-              const ListTile(
+               ListTile(
                 title: Text(
-                  "Sign In",
+                  AppLocalizations.of(context)!.signIn,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text("Please Enter Your Mobile Number",
+                subtitle: Text(AppLocalizations.of(context)!.enterMobNum,
                     style: TextStyle(
                       fontSize: 16,
                     )),
@@ -81,7 +82,7 @@ class _SignInState extends State<SignIn> {
                       height: 50,
                     ),
                     Text(
-                      "Mobile Number",
+                      AppLocalizations.of(context)!.mobNum,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -112,7 +113,7 @@ class _SignInState extends State<SignIn> {
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide: const BorderSide(
                                       color: Colors.blueAccent)),
-                              labelText: "Phone Number",
+                              labelText: AppLocalizations.of(context)!.mobNum,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
@@ -131,15 +132,26 @@ class _SignInState extends State<SignIn> {
                             },
                           ),
                           const SizedBox(height: 25),
-                          const Text("By login to account, you agree our"),
-                          TextButton(
-                              onPressed: () {},
-                              child: const Text("Terms and conditions")),
+                          Container(
+                            width: double.infinity,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(AppLocalizations.of(context)!.agreeLogIn),
+                                Expanded(
+                                  child: TextButton(
+                                      onPressed: () {},
+                                      child: Text(AppLocalizations.of(context)!.termsAndCondition,overflow: TextOverflow.clip,)),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
                           MaterialButton(
                             minWidth: 1000,
                             height: 60,
-                            child: const Text(
-                              'Next',
+                            child: Text(
+                              AppLocalizations.of(context)!.next,
                               style: TextStyle(fontSize: 18),
                             ),
                             color: Colors.indigo,
@@ -147,27 +159,29 @@ class _SignInState extends State<SignIn> {
                                 borderRadius: BorderRadius.circular(40)),
                             textColor: Colors.white,
                             onPressed: () {
-                              BlocProvider.of<AuthBloc>(context).add(
-                                CheckUserEvent(
-                                  phone: CheckUser(
-                                    phone: fullPhone,
+                              if(_key.currentState!.validate()){
+                                BlocProvider.of<AuthBloc>(context).add(
+                                  CheckUserEvent(
+                                    phone: CheckUser(
+                                      phone: fullPhone,
+                                    ),
+                                    existAction: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppRoutes.SIGNINPASS,
+                                        arguments: fullPhone,
+                                      );
+                                    },
+                                    notExistAction: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppRoutes.SIGNUP,
+                                        arguments: fullPhone,
+                                      );
+                                    },
                                   ),
-                                  existAction: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      AppRoutes.SIGNINPASS,
-                                      arguments: fullPhone,
-                                    );
-                                  },
-                                  notExistAction: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      AppRoutes.SIGNUP,
-                                      arguments: fullPhone,
-                                    );
-                                  },
-                                ),
-                              );
+                                );
+                              }
                             },
                           ),
                           const SizedBox(
@@ -199,8 +213,8 @@ class _SignInState extends State<SignIn> {
                                           shape: BoxShape.circle,
                                         ),
                                       ),
-                                      const Text(
-                                        "Sign In With Google",
+                                      Text(
+                                        AppLocalizations.of(context)!.signWithGoogle,
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,

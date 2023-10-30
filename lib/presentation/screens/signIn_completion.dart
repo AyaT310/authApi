@@ -3,8 +3,9 @@ import 'package:auth_api/utils/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../controller/auth_bloc/auth_bloc.dart';
+import '../../buisnessLogic/auth_bloc/auth_bloc.dart';
 import '../../data/models/user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignInCompletion extends StatefulWidget {
   final String? phone;
@@ -32,12 +33,12 @@ class _SignInCompletionState extends State<SignInCompletion> {
           child: Column(
             children: [
               Image.asset("assets/images/app_logo.jpg"),
-              const ListTile(
+               ListTile(
                 title: Text(
-                  "Sign In",
+                  AppLocalizations.of(context)!.signIn,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text("Please Enter Your Password",
+                subtitle: Text(AppLocalizations.of(context)!.enterPass,
                     style: TextStyle(
                       fontSize: 16,
                     )),
@@ -68,7 +69,7 @@ class _SignInCompletionState extends State<SignInCompletion> {
                     ),
                     const SizedBox(height: 50),
                     Text(
-                      "Password",
+                      AppLocalizations.of(context)!.password,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -102,10 +103,10 @@ class _SignInCompletionState extends State<SignInCompletion> {
                                   color: Colors.grey,
                                 ),
                               ),
-                              label: const Text(
-                                "Password",
+                              label: Text(
+                                AppLocalizations.of(context)!.password,
                               ),
-                              hintText: "Password",
+                              hintText: AppLocalizations.of(context)!.password,
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide:
@@ -124,31 +125,33 @@ class _SignInCompletionState extends State<SignInCompletion> {
                                 borderRadius: BorderRadius.circular(40)),
                             textColor: Colors.white,
                             onPressed: () async {
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.setString("phone", widget.phone!);
-                              BlocProvider.of<AuthBloc>(context).add(
-                                LoginEvent(
-                                  CheckUser(
-                                    phone: widget.phone,
-                                    password: passwordController.text.trim(),
+                              if(_key.currentState!.validate()){
+                                SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                                prefs.setString("phone", widget.phone!);
+                                BlocProvider.of<AuthBloc>(context).add(
+                                  LoginEvent(
+                                    CheckUser(
+                                      phone: widget.phone,
+                                      password: passwordController.text.trim(),
+                                    ),
+                                        () {
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        AppRoutes.HOME,
+                                        arguments:
+                                        BlocProvider.of<AuthBloc>(context)
+                                            .accessToken,
+                                            (route) => false,
+                                      );
+                                    },
                                   ),
-                                  () {
-                                    Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      AppRoutes.HOME,
-                                      arguments:
-                                          BlocProvider.of<AuthBloc>(context)
-                                              .accessToken,
-                                      (route) => false,
-                                    );
-                                  },
-                                ),
-                              );
+                                );
+                              }
                               // _login();
                             },
-                            child: const Text(
-                              'Next',
+                            child: Text(
+                              AppLocalizations.of(context)!.next,
                               style: TextStyle(fontSize: 18),
                             ),
                           ),

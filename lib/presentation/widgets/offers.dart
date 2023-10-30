@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/models/home_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Offers extends StatelessWidget {
   final List<TopAds>? data;
@@ -11,7 +12,7 @@ class Offers extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Special Offers",
+        Text(AppLocalizations.of(context)!.offers,
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -57,9 +58,9 @@ class Offers extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {},
-                          child: const Text(
-                            "Shop Now",
-                            style: TextStyle(
+                          child: Text(
+                            AppLocalizations.of(context)!.shopnow,
+                            style: const TextStyle(
                                 fontSize: 18, color: Colors.black),
                           )),
                     ],

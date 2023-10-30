@@ -1,6 +1,7 @@
+import 'package:auth_api/config/router/app_route.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/home_model.dart';
-import 'package:auth_api/config/aya_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Categories extends StatelessWidget {
   final List<RetailersCategories> retailerCat;
@@ -13,7 +14,7 @@ class Categories extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Shop By Category",
+          AppLocalizations.of(context)!.categoryshop,
           style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -44,7 +45,9 @@ class Categories extends StatelessWidget {
         Row(
           children: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                // Navigator.pushNamed(context, AppRoutes.ALLCATEGORIES);
+              },
               child: const Text("See More",
                   style: TextStyle(
                       fontSize: 14,

@@ -1,4 +1,7 @@
+import 'package:auth_api/config/router/app_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
@@ -9,6 +12,23 @@ class SearchBarWidget extends StatefulWidget {
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
   final TextEditingController _searchController = TextEditingController();
+  bool isEnglish = true;
+
+  void changeLanguage() async{
+    print(isEnglish);
+    SharedPreferences prefs =
+    await SharedPreferences.getInstance();
+    isEnglish = await prefs.getBool("isEnglish") ?? true;
+    setState(() {
+      print("isEnglish $isEnglish");
+      isEnglish = !isEnglish;
+      print("Set state $isEnglish");
+      prefs.setBool("isEnglish", isEnglish);
+    });
+    // await ;
+    // Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGNIN, (route) => false);
+    print("fssss${prefs.getBool("isEnglish")}");
+  }
 
   @override
   void dispose() {
@@ -19,6 +39,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          // mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(
               child: SizedBox(
@@ -30,9 +52,6 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                     fillColor: Colors.grey.shade200,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
-                      // borderSide: BorderSide(
-                      //   style: BorderStyle.solid,
-                      // ),
                       borderSide: BorderSide.none,
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -41,7 +60,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                         color: Colors.grey.shade200,
                       ),
                     ),
-                    hintText: "Search",
+                    hintText: AppLocalizations.of(context)!.search,
                     prefixIcon: IconButton(
                       icon: const Icon(
                         Icons.search,
@@ -54,9 +73,15 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               ),
             ),
             const SizedBox(width: 15),
-            const Icon(
-                Icons.notifications,
-                size: 35,color: Color.fromARGB(255, 16, 98, 92)
+            IconButton(onPressed: () {
+              // SharedPreferences prefs =
+              //     await SharedPreferences.getInstance();
+              // prefs.setBool("isEnglish", isEnglish);
+              changeLanguage();
+            },
+                icon: Icon(Icons.language_outlined,
+                size: 35,color: Color.fromARGB(255, 16, 98, 92),
+                ),
             ),
           ],
         )
