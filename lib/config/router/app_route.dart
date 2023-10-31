@@ -7,4 +7,5 @@ class AppRoutes {
   static const String HOME = 'home';
   static const String ALLCATEGORIES = 'all_categories';
   static const String ALLRETAILERS = 'all_retailers';
+  static const String NOTIFICATIONS = 'notifications_screen';
 }

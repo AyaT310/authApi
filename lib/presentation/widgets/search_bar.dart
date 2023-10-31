@@ -12,10 +12,10 @@ class SearchBarWidget extends StatefulWidget {
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
   final TextEditingController _searchController = TextEditingController();
-  bool isEnglish = true;
+  late bool isEnglish;
 
   void changeLanguage() async{
-    print(isEnglish);
+    // print(isEnglish);
     SharedPreferences prefs =
     await SharedPreferences.getInstance();
     isEnglish = await prefs.getBool("isEnglish") ?? true;
@@ -25,8 +25,6 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       print("Set state $isEnglish");
       prefs.setBool("isEnglish", isEnglish);
     });
-    // await ;
-    // Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGNIN, (route) => false);
     print("fssss${prefs.getBool("isEnglish")}");
   }
 

@@ -4,6 +4,7 @@ import 'package:auth_api/data/repository/api_retailers.dart';
 import 'package:auth_api/l10n/l10n.dart';
 import 'package:auth_api/presentation/screens/home.dart';
 import 'package:auth_api/presentation/screens/signIn.dart';
+import 'package:auth_api/services/push_notification_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,10 +16,13 @@ import 'buisnessLogic/retailers_bloc/retailer_bloc.dart';
 import 'data/repository/api_client.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await Firebase.initializeApp();
+  await FirebaseApi().initNotifications();
   var phone = prefs.getString("phone");
   var language = prefs.getBool("isEnglish");
   runApp(MultiBlocProvider(
@@ -42,6 +46,7 @@ Future<void> main() async {
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: RouteGenerator.generateRoute,
+      navigatorKey: navigatorKey,
       home: phone == null ? const SignIn() : const Home(),
       builder: EasyLoading.init(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
